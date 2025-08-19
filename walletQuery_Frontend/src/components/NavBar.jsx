@@ -1,8 +1,10 @@
-/* eslint-disable no-unused-vars */
+
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Bell, User, Wallet, ChevronDown, Settings, LogOut, Moon, Sun, Globe, Copy, ExternalLink } from "lucide-react";
 import useResponsive from "../core/hooks/useResponsive";
+import { copyToClipboard, truncateAddress } from "../core/utils/HelperFunctions";
+import { dropdownVariants } from "../core/animations/animations";
 
 const NavBar = () => {
   const { isMobile, isTablet, isDesktop } = useResponsive();
@@ -26,27 +28,6 @@ const NavBar = () => {
     { icon: LogOut, label: "Logout", route: "/logout", danger: true },
   ];
 
-  const dropdownVariants = {
-    hidden: {
-      opacity: 0,
-      y: -10,
-      scale: 0.95,
-      transition: {
-        duration: 0.2,
-      },
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 30,
-      },
-    },
-  };
-
   const handleMenuItemClick = (item) => {
     if (item.action) {
       item.action();
@@ -56,21 +37,23 @@ const NavBar = () => {
     setIsProfileOpen(false);
   };
 
-  const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text);
-    console.log("Address copied to clipboard");
-  };
-
-  const truncateAddress = (address) => {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  };
-
   return (
-    <motion.nav className="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border-b border-slate-700 shadow-2xl z-40" initial={{ y: -64 }} animate={{ y: 0 }} transition={{ type: "spring", stiffness: 300, damping: 30 }}>
+    <motion.nav
+      className={`
+        fixed top-0 right-0 h-16 z-20
+        bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 
+        border-b border-slate-700 shadow-2xl
+        transition-all duration-300
+        ${isMobile ? "left-0" : "left-20"}
+      `}
+      initial={{ y: -64 }}
+      animate={{ y: 0 }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+    >
       <div className="flex items-center justify-between h-full px-4 lg:px-6">
         {/* Left Section - Logo & Search */}
         <div className="flex items-center space-x-4 flex-1">
-          {/* Logo - Only show on larger screens when sidebar might be collapsed */}
+          {/* Logo - Only show on larger screens or when sidebar is collapsed */}
           {(isTablet || isDesktop) && (
             <motion.div className="flex items-center space-x-2" whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300, damping: 30 }}>
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
@@ -145,7 +128,7 @@ const NavBar = () => {
                         </motion.button>
                       </div>
                     </div>
-                    <div className="font-mono text-sm text-white bg-slate-900 px-3 py-2 rounded-lg">{walletData.address}</div>
+                    <div className="font-mono text-sm text-white bg-slate-900 px-3 py-2 rounded-lg break-all">{walletData.address}</div>
                   </div>
                 </motion.div>
               )}
@@ -214,9 +197,9 @@ const NavBar = () => {
         </div>
       </div>
 
-      {/* Mobile overlay for dropdowns */}
+      {/* Mobile/Tablet overlay for dropdowns */}
       <AnimatePresence>
-        {isMobile && (isProfileOpen || isWalletOpen) && (
+        {(isMobile || isTablet) && (isProfileOpen || isWalletOpen) && (
           <motion.div
             className="fixed inset-0 bg-black bg-opacity-50 z-30"
             initial={{ opacity: 0 }}

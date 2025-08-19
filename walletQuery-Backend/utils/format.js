@@ -9,9 +9,11 @@ export function formatEthTransaction(tx, timestamp = null) {
     hash: tx.hash,
     from: tx.from,
     to: tx.to,
-    value: ethers.formatEther(tx.value), // convert wei → ETH
+    value: ethers.formatEther(tx.value || "0"), // convert wei → ETH
     blockNumber: tx.blockNumber,
     timestamp: timestamp || null,
+    gasUsed: tx.gasLimit ? tx.gasLimit.toString() : null,
+    gasPrice: tx.gasPrice ? ethers.formatUnits(tx.gasPrice, "gwei") : null,
   };
 }
 
@@ -20,7 +22,8 @@ export function formatEthTransaction(tx, timestamp = null) {
  */
 export function formatBalance(balanceWei) {
   return {
-    balance: ethers.formatEther(balanceWei), // string in ETH
+    balance: ethers.formatEther(balanceWei || "0"), // string in ETH
+    balanceWei: balanceWei.toString(),
     unit: "ETH",
   };
 }
@@ -30,11 +33,13 @@ export function formatBalance(balanceWei) {
  */
 export function formatTokenTransaction(log, tokenSymbol = "ERC20", timestamp = null, decimals = 18) {
   return {
+    hash: log.transactionHash || `${log.address}-${log.blockNumber}`, // fallback hash
     token: log.address, // token contract address
     symbol: tokenSymbol,
     from: log.from,
     to: log.to,
-    value: ethers.formatUnits(log.value, decimals), // convert with decimals
+    value: ethers.formatUnits(log.value || "0", decimals), // convert with decimals
+    valueRaw: log.value.toString(),
     blockNumber: log.blockNumber,
     timestamp: timestamp || null,
   };
@@ -45,7 +50,9 @@ export function formatTokenTransaction(log, tokenSymbol = "ERC20", timestamp = n
  */
 export function formatTokenBalance(balanceRaw, symbol = "ERC20", decimals = 18) {
   return {
-    balance: ethers.formatUnits(balanceRaw, decimals),
+    balance: ethers.formatUnits(balanceRaw || "0", decimals),
+    balanceRaw: balanceRaw.toString(),
     unit: symbol,
+    decimals: decimals,
   };
 }
