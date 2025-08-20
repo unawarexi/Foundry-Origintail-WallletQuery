@@ -21,8 +21,7 @@ A RESTful API for crawling and retrieving Ethereum blockchain transaction data f
 
 1. **Clone/create the project directory:**
    ```bash
-   mkdir ethereum-transactions-crawler
-   cd ethereum-transactions-crawler
+   check the root readme for setup 
    ```
 
 2. **Install dependencies:**
@@ -37,19 +36,19 @@ A RESTful API for crawling and retrieving Ethereum blockchain transaction data f
 4. **Create the project structure:**
    ```
    project-root/
-   ├── app.js
+   ├── index.js
    ├── package.json
    ├── .env
-   └── src/
-       ├── config/
-       │   └── ether.provider.js
-       ├── controllers/
-       │   └── transactions.controller.js
-       ├── routes/
-       │   └── transactions.routes.js
-       ├── services/
-       │   └── eth.service.js
-       └── utils/
+   ├── .api/@opensea 
+   ├── config/
+   │   └── ether.provider.js
+   ├── controllers/
+   │   └── eth.controller.js, nft.controller.js
+   ├── routes/
+   │   └── eth.routes.js, nft.routes.js
+   ├── services/
+   │   └── eth.service.js, nft.service.js
+   └── utils/
            └── format.js
    ```
 
@@ -69,14 +68,11 @@ A RESTful API for crawling and retrieving Ethereum blockchain transaction data f
 4. Copy the API key
 5. Use: `https://eth-mainnet.alchemyapi.io/v2/YOUR_API_KEY`
 
+**Note: do the same for `etherscan and opensea` check docs for further information**
+
 ## Running the Application
 
-1. **Development mode:**
-   ```bash
-   npm run dev
-   ```
-
-2. **Production mode:**
+1. **Start Server:**
    ```bash
    npm start
    ```
