@@ -1,4 +1,3 @@
-// Animation variants for sidebar components
 
 /**
  * Sidebar animation variants for mobile and desktop
@@ -24,7 +23,7 @@ export const sidebarVariants = {
   },
   desktop: {
     expanded: {
-      width: "240px", // Reduced from 280px/320px
+      width: "240px", 
       transition: {
         type: "spring",
         stiffness: 300,
@@ -32,7 +31,7 @@ export const sidebarVariants = {
       },
     },
     collapsed: {
-      width: "64px", // Reduced from 80px
+      width: "64px",
       transition: {
         type: "spring",
         stiffness: 300,
