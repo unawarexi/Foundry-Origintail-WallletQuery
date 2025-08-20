@@ -7,7 +7,7 @@ import { formatEthTransaction, formatTokenTransaction } from "../utils/format.js
 const ERC20_ABI = ["function balanceOf(address) view returns (uint256)", "function decimals() view returns (uint8)", "function symbol() view returns (string)", "event Transfer(address indexed from, address indexed to, uint256 value)"];
 
 // Configuration
-const MAX_BLOCKS_PER_REQUEST = 50;
+const MAX_BLOCKS_PER_REQUEST = 500;
 const MAX_TRANSACTIONS_PER_REQUEST = 1000; // Etherscan default limit
 const REQUEST_DELAY = 300;
 

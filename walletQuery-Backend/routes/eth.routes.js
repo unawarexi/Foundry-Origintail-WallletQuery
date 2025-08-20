@@ -46,7 +46,7 @@ import {
   // Export endpoints
   exportTransactionsCSV,
   exportTransactionsJSON,
-} from "../controllers/transactions.controller.js";
+} from "../controllers/eth.controller.js";
 
 const router = express.Router();
 

@@ -32,7 +32,7 @@ import {
   subscribeToWalletUpdates,
   formatTransactionData,
   calculateTransactionSummary,
-} from "../apis/contract.api.js";
+} from "../apis/eth.api.js";
 
 // Create context
 const BlockchainContext = createContext();

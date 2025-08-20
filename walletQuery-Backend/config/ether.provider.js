@@ -1,10 +1,11 @@
 // src/config/provider.js
 import { ethers } from "ethers";
+import opensea from "@api/opensea";
 import dotenv from "dotenv";
 dotenv.config();
 
 /**
- * Ethereum provider setup with fallbacks and Etherscan API integration
+ * Ethereum provider setup with fallbacks and API integrations
  *
  * Supported providers in order of preference:
  * 1. Infura (recommended)
@@ -16,6 +17,7 @@ dotenv.config();
  * INFURA_URL=https://mainnet.infura.io/v3/YOUR_PROJECT_ID
  * ALCHEMY_URL=https://eth-mainnet.alchemyapi.io/v2/YOUR_API_KEY
  * ETHERSCAN_API_KEY=YOUR_ETHERSCAN_API_KEY
+ * OPENSEA_API_KEY=YOUR_OPENSEA_API_KEY
  * LOCAL_RPC_URL=http://localhost:8545
  */
 
@@ -53,6 +55,15 @@ export const etherscanConfig = {
   apiKey: process.env.ETHERSCAN_API_KEY,
   chainId: 1, // Mainnet
   rateLimitDelay: 200, // 5 calls per second for free tier
+};
+
+// OpenSea API configuration
+export const openseaConfig = {
+  apiKey: process.env.OPENSEA_API_KEY,
+  baseUrl: "https://api.opensea.io/v2",
+  rateLimitDelay: 100, // 10 calls per second for basic plan
+  supported_chains: ["ethereum", "polygon", "klaytn", "bsc", "solana", "arbitrum", "arbitrum_nova", "arbitrum_sepolia", "avalanche",
+    "optimism", "base", "blast", "sei", "zora", "sepolia", "base_sepolia"],
 };
 
 /**
@@ -99,4 +110,58 @@ export async function makeEtherscanRequest(params) {
   }
 }
 
+/**
+ * Initialize OpenSea API if key is provided
+ */
+function initializeOpenSea() {
+  if (openseaConfig.apiKey) {
+    try {
+      opensea.auth(openseaConfig.apiKey);
+      console.log("✅ OpenSea API initialized successfully");
+      return true;
+    } catch (error) {
+      console.error("❌ Failed to initialize OpenSea API:", error.message);
+      return false;
+    }
+  } else {
+    console.warn("⚠️ OPENSEA_API_KEY not found in environment variables");
+    return false;
+  }
+}
+
+// Initialize OpenSea on module load
+const openseaInitialized = initializeOpenSea();
+
+export function isValidAddress(address) {
+  return ethers.isAddress(address);
+}
+
+export function formatEther(wei) {
+  return ethers.formatEther(wei);
+}
+
+export function parseEther(ether) {
+  return ethers.parseEther(ether.toString());
+}
+
+export async function getNetworkInfo() {
+  try {
+    const network = await provider.getNetwork();
+    return {
+      chainId: Number(network.chainId),
+      name: network.name,
+      ensAddress: network.ensAddress,
+    };
+  } catch (error) {
+    console.error("Error getting network info:", error);
+    throw error;
+  }
+}
+
+export function isSupportedChain(chain) {
+  return openseaConfig.supported_chains.includes(chain.toLowerCase());
+}
+
+// Export configurations and provider
+export { openseaInitialized };
 export default provider;
