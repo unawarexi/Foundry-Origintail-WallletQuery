@@ -5,7 +5,7 @@ import { ethers } from "ethers";
 
 class NFTService {
   constructor() {
-    // Initialize OpenSea with API key from environment
+    // we Initialized OpenSea with API key from environment
     if (process.env.OPENSEA_API_KEY) {
       opensea.auth(process.env.OPENSEA_API_KEY);
     } else {
@@ -96,10 +96,10 @@ class NFTService {
 
       const response = await opensea.list_nfts_by_collection(params);
 
-      // Return the full response structure as documented
+     
       return {
         success: true,
-        data: response.data, // Full NFTs response with all fields
+        data: response.data, 
         collection: collectionSlug,
         pagination: {
           next: response.data.next || null,

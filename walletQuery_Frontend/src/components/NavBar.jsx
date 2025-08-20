@@ -12,7 +12,7 @@ const NavBar = () => {
   const [isWalletOpen, setIsWalletOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [notifications] = useState(3); // Mock notification count
+  const [notifications] = useState(3); // this is a Mock notification count
 
   // Mock wallet data
   const walletData = {
@@ -39,11 +39,8 @@ const NavBar = () => {
 
   return (
     <motion.nav
-      className={`
-        fixed top-0 right-0 h-16 z-20 rounded-tl-3xl rounded-bl-3xl
-        bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 
-        border-b border-slate-700 shadow-2xl
-        transition-all duration-300
+      className={` fixed top-0 right-0 h-16 z-20 rounded-tl-3xl rounded-bl-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 
+        border-b border-slate-700 shadow-2xl transition-all duration-300
         ${isMobile ? "left-0" : "left-20"}
       `}
       initial={{ y: -64 }}

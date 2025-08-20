@@ -106,7 +106,7 @@ const Dashboard = () => {
 
   // Debug logging for all context data
   useEffect(() => {
-    console.log("🔍 Dashboard Debug - Context Data:", {
+    console.log(" Dashboard Debug - Context Data:", {
       transactions: transactions?.length || 0,
       ethBalance,
       tokenTransactions: tokenTransactions?.length || 0,
@@ -126,7 +126,7 @@ const Dashboard = () => {
     if (tokenTransactions && tokenTransactions.length > 0) {
       const tokens = [...new Set(tokenTransactions.map((tx) => tx.tokenSymbol).filter(Boolean))];
       setAvailableTokens(tokens);
-      console.log("🪙 Available tokens:", tokens);
+      console.log(" Available tokens:", tokens);
     }
   }, [tokenTransactions]);
 
@@ -138,7 +138,7 @@ const Dashboard = () => {
     }
 
     let filtered = [...allTransactions];
-    console.log("🔄 Applying filters to", filtered.length, "transactions");
+    console.log(" Applying filters to", filtered.length, "transactions");
 
     // Date filter
     if (selectedDateFilter !== "all") {
@@ -152,7 +152,7 @@ const Dashboard = () => {
           const txTime = tx.timestamp * 1000;
           return txTime >= startTime && txTime <= endTime;
         });
-        console.log("📅 Custom date filter applied:", { startTime, endTime, results: filtered.length });
+        console.log("Custom date filter applied:", { startTime, endTime, results: filtered.length });
       } else {
         const timeRanges = {
           today: 24 * 60 * 60 * 1000,
@@ -165,7 +165,7 @@ const Dashboard = () => {
 
         cutoff = now - timeRanges[selectedDateFilter];
         filtered = filtered.filter((tx) => tx.timestamp * 1000 > cutoff);
-        console.log("📅 Date filter applied:", { filter: selectedDateFilter, cutoff, results: filtered.length });
+        console.log("Date filter applied:", { filter: selectedDateFilter, cutoff, results: filtered.length });
       }
     }
 
@@ -174,13 +174,13 @@ const Dashboard = () => {
       const minBlock = blockRange.min ? parseInt(blockRange.min) : 0;
       const maxBlock = blockRange.max ? parseInt(blockRange.max) : Infinity;
       filtered = filtered.filter((tx) => tx.blockNumber >= minBlock && tx.blockNumber <= maxBlock);
-      console.log("🧱 Block range filter applied:", { minBlock, maxBlock, results: filtered.length });
+      console.log("Block range filter applied:", { minBlock, maxBlock, results: filtered.length });
     }
 
     // Transaction type filter
     if (selectedTypeFilter !== "all") {
       filtered = filtered.filter((tx) => tx.type === selectedTypeFilter);
-      console.log("⚡ Type filter applied:", { type: selectedTypeFilter, results: filtered.length });
+      console.log("Type filter applied:", { type: selectedTypeFilter, results: filtered.length });
     }
 
     // Token filter
@@ -190,7 +190,7 @@ const Dashboard = () => {
       } else {
         filtered = filtered.filter((tx) => tx.tokenSymbol === selectedTokenFilter);
       }
-      console.log("🪙 Token filter applied:", { token: selectedTokenFilter, results: filtered.length });
+      console.log(" Token filter applied:", { token: selectedTokenFilter, results: filtered.length });
     }
 
     // Amount range filter
@@ -201,11 +201,11 @@ const Dashboard = () => {
         const value = parseFloat(tx.value || 0);
         return value >= minAmount && value <= maxAmount;
       });
-      console.log("💰 Amount filter applied:", { minAmount, maxAmount, results: filtered.length });
+      console.log(" Amount filter applied:", { minAmount, maxAmount, results: filtered.length });
     }
 
     setFilteredTransactions(filtered);
-    console.log("✅ Final filtered transactions:", filtered.length);
+    console.log(" Final filtered transactions:", filtered.length);
   }, [allTransactions, selectedDateFilter, selectedTypeFilter, selectedTokenFilter, customDateRange, blockRange, amountRange]);
 
   // Handle wallet search
@@ -214,10 +214,10 @@ const Dashboard = () => {
       return;
     }
 
-    console.log("🔍 Starting wallet search for:", searchQuery.trim());
+    console.log(" Starting wallet search for:", searchQuery.trim());
 
     if (!searchQuery.match(/^0x[a-fA-F0-9]{40}$/)) {
-      console.error("❌ Invalid address format");
+      console.error("Invalid address format");
       return;
     }
 
@@ -226,7 +226,7 @@ const Dashboard = () => {
     try {
       // Validate address first
       const validation = await validateWalletAddress(searchQuery.trim());
-      console.log("✅ Address validation:", validation);
+      console.log(" Address validation:", validation);
 
       if (!validation.isValid) {
         throw new Error("Invalid Ethereum address");
@@ -234,14 +234,14 @@ const Dashboard = () => {
 
       // Fetch all wallet data
       const result = await fetchWalletData(searchQuery.trim());
-      console.log("🎯 Wallet data fetched:", result);
+      console.log("Wallet data fetched:", result);
 
       // Fetch network status
       const network = await fetchNetworkStatus();
       setNetworkInfo(network);
-      console.log("🌐 Network status:", network);
+      console.log(" Network status:", network);
     } catch (error) {
-      console.error("❌ Search error:", error);
+      console.error("Search error:", error);
     }
   };
 
@@ -249,36 +249,36 @@ const Dashboard = () => {
   const handleDateRangeFilter = async () => {
     if (!currentWallet || !customDateRange.start || !customDateRange.end) return;
 
-    console.log("🗓️ Applying date range filter:", customDateRange);
+    console.log("Applying date range filter:", customDateRange);
     try {
       const result = await fetchTransactionsByDateRange(currentWallet, customDateRange.start, customDateRange.end, selectedTypeFilter === "all" ? "all" : selectedTypeFilter);
-      console.log("📅 Date range results:", result);
+      console.log("Date range results:", result);
 
       // Update filtered transactions with results
       if (result && Array.isArray(result)) {
         setFilteredTransactions(result);
       }
     } catch (error) {
-      console.error("❌ Date range filter error:", error);
+      console.error("Date range filter error:", error);
     }
   };
 
   const handleTokenFilter = async (tokenSymbol) => {
     if (!currentWallet) return;
 
-    console.log("🎯 Applying token filter:", tokenSymbol);
+    console.log("Applying token filter:", tokenSymbol);
     setSelectedTokenFilter(tokenSymbol);
 
     if (tokenSymbol !== "all") {
       try {
         const result = await fetchTransactionsByToken(currentWallet, tokenSymbol);
-        console.log("🪙 Token filter results:", result);
+        console.log(" Token filter results:", result);
 
         if (result && Array.isArray(result)) {
           setFilteredTransactions(result);
         }
       } catch (error) {
-        console.error("❌ Token filter error:", error);
+        console.error("Token filter error:", error);
       }
     }
   };
@@ -286,19 +286,19 @@ const Dashboard = () => {
   const handleTypeFilter = async (type) => {
     if (!currentWallet) return;
 
-    console.log("⚡ Applying type filter:", type);
+    console.log("Applying type filter:", type);
     setSelectedTypeFilter(type);
 
     if (type !== "all") {
       try {
         const result = await fetchTransactionsByType(currentWallet, type);
-        console.log("📊 Type filter results:", result);
+        console.log(" Type filter results:", result);
 
         if (result && Array.isArray(result)) {
           setFilteredTransactions(result);
         }
       } catch (error) {
-        console.error("❌ Type filter error:", error);
+        console.error("Type filter error:", error);
       }
     }
   };
@@ -306,32 +306,32 @@ const Dashboard = () => {
   const handleBlockRangeFilter = async () => {
     if (!currentWallet || !blockRange.min || !blockRange.max) return;
 
-    console.log("🧱 Applying block range filter:", blockRange);
+    console.log("Applying block range filter:", blockRange);
     try {
       const result = await fetchTransactionsByBlockRange(currentWallet, parseInt(blockRange.min), parseInt(blockRange.max), selectedTypeFilter === "all" ? "all" : selectedTypeFilter);
-      console.log("🔢 Block range results:", result);
+      console.log(" Block range results:", result);
 
       if (result && Array.isArray(result)) {
         setFilteredTransactions(result);
       }
     } catch (error) {
-      console.error("❌ Block range filter error:", error);
+      console.error("Block range filter error:", error);
     }
   };
 
   const handleAmountRangeFilter = async () => {
     if (!currentWallet || (!amountRange.min && !amountRange.max)) return;
 
-    console.log("💰 Applying amount range filter:", amountRange);
+    console.log(" Applying amount range filter:", amountRange);
     try {
       const result = await fetchTransactionsByAmountRange(currentWallet, parseFloat(amountRange.min) || 0, parseFloat(amountRange.max) || Infinity, selectedTokenFilter === "all" ? "all" : selectedTokenFilter);
-      console.log("💵 Amount range results:", result);
+      console.log(" Amount range results:", result);
 
       if (result && Array.isArray(result)) {
         setFilteredTransactions(result);
       }
     } catch (error) {
-      console.error("❌ Amount range filter error:", error);
+      console.error("Amount range filter error:", error);
     }
   };
 
@@ -339,23 +339,23 @@ const Dashboard = () => {
   const handleFetchAnalytics = async () => {
     if (!currentWallet) return;
 
-    console.log("📊 Fetching advanced analytics...");
+    console.log(" Fetching advanced analytics...");
     try {
       // Fetch transaction patterns
       const patterns = await fetchTransactionPatterns(currentWallet, "7d");
       setTransactionPatterns(patterns);
-      console.log("📈 Transaction patterns:", patterns);
+      console.log("Transaction patterns:", patterns);
 
       // Fetch activity timeline
       const timeline = await fetchActivityTimeline(currentWallet, "daily", "7d");
       setActivityTimeline(timeline);
-      console.log("📊 Activity timeline:", timeline);
+      console.log(" Activity timeline:", timeline);
 
       // Fetch comprehensive analytics
       const analytics = await fetchWalletAnalytics(currentWallet);
-      console.log("🎯 Comprehensive analytics:", analytics);
+      console.log("Comprehensive analytics:", analytics);
     } catch (error) {
-      console.error("❌ Analytics fetch error:", error);
+      console.error("Analytics fetch error:", error);
     }
   };
 
@@ -363,7 +363,7 @@ const Dashboard = () => {
   const handleAdvancedSearch = async () => {
     if (!currentWallet) return;
 
-    console.log("🔍 Performing advanced search with filters:", {
+    console.log(" Performing advanced search with filters:", {
       address: currentWallet,
       startDate: customDateRange.start,
       endDate: customDateRange.end,
@@ -393,13 +393,13 @@ const Dashboard = () => {
 
       const result = await fetchTransactionsAdvanced(filters);
       setAdvancedResults(result);
-      console.log("🚀 Advanced search results:", result);
+      console.log(" Advanced search results:", result);
 
       if (result?.transactions) {
         setFilteredTransactions(result.transactions);
       }
     } catch (error) {
-      console.error("❌ Advanced search error:", error);
+      console.error("Advanced search error:", error);
     }
   };
 
@@ -424,7 +424,7 @@ const Dashboard = () => {
   const handleExport = async (format = "csv") => {
     if (!currentWallet || !filteredTransactions.length) return;
 
-    console.log(`📁 Exporting ${filteredTransactions.length} transactions as ${format}`);
+    console.log(`Exporting ${filteredTransactions.length} transactions as ${format}`);
 
     try {
       if (format === "csv") {
@@ -436,9 +436,9 @@ const Dashboard = () => {
           transactions: filteredTransactions,
         });
       }
-      console.log("✅ Export successful");
+      console.log(" Export successful");
     } catch (error) {
-      console.error("❌ Export error:", error);
+      console.error("Export error:", error);
     }
   };
 
@@ -492,7 +492,7 @@ const Dashboard = () => {
       },
     ];
 
-    console.log("📊 Calculated stats:", stats);
+    console.log(" Calculated stats:", stats);
     return stats;
   };
 
@@ -851,7 +851,7 @@ const Dashboard = () => {
                   value={selectedDateFilter}
                   onChange={(e) => {
                     setSelectedDateFilter(e.target.value);
-                    console.log("📅 Date filter changed:", e.target.value);
+                    console.log("Date filter changed:", e.target.value);
                   }}
                   className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
@@ -1405,7 +1405,7 @@ const Dashboard = () => {
               onClick={() => {
                 // Fetch all available tokens for this wallet
                 if (availableTokens.length > 0) {
-                  console.log("🪙 Available tokens for filtering:", availableTokens);
+                  console.log(" Available tokens for filtering:", availableTokens);
                   setSelectedTokenFilter(availableTokens[0]);
                   handleTokenFilter(availableTokens[0]);
                 }
@@ -1434,7 +1434,7 @@ const Dashboard = () => {
               </h3>
               <button
                 onClick={() => {
-                  console.log("🔍 Full Debug Data Dump:");
+                  console.log(" Full Debug Data Dump:");
                   console.log("Current Wallet:", currentWallet);
                   console.log("ETH Balance:", ethBalance);
                   console.log("Transactions:", transactions);

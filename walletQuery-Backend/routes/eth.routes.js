@@ -15,7 +15,7 @@ import {
   // All transactions
   getAllTransactions,
 
-  // New Etherscan API endpoints
+  // Etherscan API endpoints
   getInternalTransactions,
   getNFTTransactions,
   getERC1155Transactions,

@@ -126,7 +126,7 @@ export async function getAllTransactions(req, res) {
   }
 }
 
-// New endpoint for internal transactions
+// endpoint for internal transactions
 export async function getInternalTransactions(req, res) {
   try {
     const { address, fromBlock } = req.query;
@@ -144,7 +144,7 @@ export async function getInternalTransactions(req, res) {
   }
 }
 
-// New endpoint for NFT transactions
+// endpoint for NFT transactions
 export async function getNFTTransactions(req, res) {
   try {
     const { address, contractAddress, fromBlock } = req.query;
@@ -162,7 +162,7 @@ export async function getNFTTransactions(req, res) {
   }
 }
 
-// New endpoint for ERC1155 transactions
+// endpoint for ERC1155 transactions
 export async function getERC1155Transactions(req, res) {
   try {
     const { address, contractAddress, fromBlock } = req.query;
@@ -180,7 +180,7 @@ export async function getERC1155Transactions(req, res) {
   }
 }
 
-// New endpoint for multiple balances
+// endpoint for multiple balances
 export async function getMultipleBalances(req, res) {
   try {
     const { addresses } = req.query;
@@ -203,7 +203,7 @@ export async function getMultipleBalances(req, res) {
   }
 }
 
-// New endpoint for address funding information
+//endpoint for address funding information
 export async function getAddressFundedBy(req, res) {
   try {
     const { address } = req.query;
@@ -220,7 +220,7 @@ export async function getAddressFundedBy(req, res) {
   }
 }
 
-// New endpoint for mined blocks
+// endpoint for mined blocks
 export async function getMinedBlocks(req, res) {
   try {
     const { address, blocktype = "blocks" } = req.query;
@@ -241,7 +241,7 @@ export async function getMinedBlocks(req, res) {
   }
 }
 
-// New endpoint for beacon chain withdrawals
+// endpoint for beacon chain withdrawals
 export async function getBeaconWithdrawals(req, res) {
   try {
     const { address, fromBlock } = req.query;
@@ -259,7 +259,7 @@ export async function getBeaconWithdrawals(req, res) {
   }
 }
 
-// Enhanced endpoint for current balance
+// endpoint for current balance
 export async function getBalance(req, res) {
   try {
     const { address } = req.query;
@@ -276,7 +276,7 @@ export async function getBalance(req, res) {
   }
 }
 
-// Filter endpoints (unchanged but now with enhanced data)
+// Filter endpoints 
 export async function getTransactionsByDateRange(req, res) {
   try {
     const { address, startDate, endDate, type = "all" } = req.query;
@@ -359,7 +359,7 @@ export async function getTransactionsByAmountRange(req, res) {
   }
 }
 
-// Analytics endpoints (enhanced with Etherscan data)
+// Analytics endpoints with Etherscan data
 export async function getWalletAnalytics(req, res) {
   try {
     const { address } = req.query;
@@ -408,7 +408,7 @@ export async function getActivityTimeline(req, res) {
   }
 }
 
-// Advanced search endpoint (enhanced)
+// search endpoint 
 export async function getTransactionsAdvanced(req, res) {
   try {
     const { address, startDate, endDate, fromBlock, toBlock, transactionType, tokenSymbol, minAmount, maxAmount, limit = 100, offset = 0, sortBy = "blockNumber", sortOrder = "desc" } = req.query;
@@ -441,7 +441,7 @@ export async function getTransactionsAdvanced(req, res) {
   }
 }
 
-// Utility endpoints (enhanced)
+// Utility endpoints 
 export async function validateAddress(req, res) {
   try {
     const { address } = req.query;
@@ -468,7 +468,7 @@ export async function getNetworkStatus(req, res) {
   }
 }
 
-// Export endpoints (enhanced with new transaction types)
+// Export endpoints ( with new transaction types)
 export async function exportTransactionsCSV(req, res) {
   try {
     const { address, ...filters } = req.query;
@@ -486,7 +486,7 @@ export async function exportTransactionsCSV(req, res) {
       transactions = await ethService.getAllTransactions(address);
     }
 
-    // Enhanced CSV headers
+    //  CSV headers
     const headers = ["Transaction Hash", "Block Number", "Timestamp", "Type", "From", "To", "Value", "Token Symbol", "Token Name", "Contract Address", "Gas Used", "Gas Price", "Status"];
 
     const rows = transactions.map((tx) => [

@@ -5,7 +5,7 @@ import NFTController from "../controllers/nfts.controller.js";
 const router = express.Router();
 router.get("/health", NFTController.healthCheck);
 
-// Get all collections from OpenSea
+// Get all collections from OpenSea (this... actual implementation may vary, we pinned to search per user address)
 // GET /api/nfts/collections?limit=50&next=cursor
 router.get("/collections", NFTController.getAllCollections);
 
@@ -13,7 +13,7 @@ router.get("/collections", NFTController.getAllCollections);
 // GET /api/nfts/account/:address?chain=ethereum&limit=50&next=cursor
 router.get("/account/:address", NFTController.getNFTsByAccount);
 
-// Get collections owned by account address
+// Get collections owned by account address (we used this instead of getAllCollections to avoid large payloads)
 // GET /api/nfts/account/:address/collections?chain=ethereum&limit=200
 router.get("/account/:address/collections", NFTController.getCollectionsByAccount);
 
@@ -25,7 +25,7 @@ router.get("/collection/:slug", NFTController.getNFTsByCollection);
 // GET /api/nfts/address/:address/info
 router.get("/address/:address/info", NFTController.getAddressInfo);
 
-// Error handling middleware for NFT routes
+// Error middleware used for NFT routes
 router.use((error, req, res, next) => {
   console.error("NFT Route Error:", error);
 

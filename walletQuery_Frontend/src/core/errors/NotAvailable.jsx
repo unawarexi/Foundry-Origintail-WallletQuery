@@ -35,8 +35,8 @@ const NotAvailable = ({ screenName = "Feature", isNotFound = false }) => {
   const Icon = getIcon();
 
   return (
-    <div className="rounded-xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-6 py-10 relative overflow-hidden">
-      {/* Decorative background elements */}
+    <div className="rounded-xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-6 py-10 border border-slate-700 relative overflow-hidden">
+      {/*  background elements */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-blue-500/5 to-transparent rounded-full blur-3xl " />
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-purple-500/5 to-transparent rounded-full blur-3xl" />
 
@@ -96,7 +96,6 @@ const NotAvailable = ({ screenName = "Feature", isNotFound = false }) => {
             </div>
           )}
         </div>
-       
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ dotenv.config();
  * 1. Infura (recommended)
  * 2. Alchemy
  * 3. Etherscan
- * 4. Local RPC (e.g. Ganache, Hardhat)
+ * 4. Local RPC (e.g. Ganache, Hardhat, anvil)
  *
  * Example .env:
  * INFURA_URL=https://mainnet.infura.io/v3/YOUR_PROJECT_ID
@@ -41,7 +41,7 @@ if (process.env.LOCAL_RPC_URL) {
 }
 
 if (providers.length === 0) {
-  throw new Error("⚠️ No Ethereum provider URL found. Please set INFURA_URL, ALCHEMY_URL, ETHERSCAN_API_KEY, or LOCAL_RPC_URL in .env");
+  throw new Error("No Ethereum provider URL found. Please set INFURA_URL, ALCHEMY_URL, ETHERSCAN_API_KEY, or LOCAL_RPC_URL in .env");
 }
 
 // Create fallback provider
@@ -120,11 +120,11 @@ function initializeOpenSea() {
       console.log("✅ OpenSea API initialized successfully");
       return true;
     } catch (error) {
-      console.error("❌ Failed to initialize OpenSea API:", error.message);
+      console.error("Failed to initialize OpenSea API:", error.message);
       return false;
     }
   } else {
-    console.warn("⚠️ OPENSEA_API_KEY not found in environment variables");
+    console.warn("OPENSEA_API_KEY not found in environment variables");
     return false;
   }
 }
