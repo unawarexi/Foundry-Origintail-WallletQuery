@@ -1,13 +1,53 @@
 import React, { useState, useEffect, useMemo, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Filter, RefreshCw, Loader2, AlertCircle, ExternalLink, Copy, CheckCircle, Image as ImageIcon, Palette, TrendingUp, TrendingDown, Eye, Heart, Star, Grid3X3, List, Calendar, DollarSign, Activity, ChevronDown, ChevronLeft, ChevronRight, Wallet, ArrowLeft, MoreHorizontal } from "lucide-react";
+import {
+  Search,
+  Filter,
+  RefreshCw,
+  Loader2,
+  AlertCircle,
+  ExternalLink,
+  Copy,
+  CheckCircle,
+  Image as ImageIcon,
+  Palette,
+  TrendingUp,
+  TrendingDown,
+  Eye,
+  Heart,
+  Star,
+  Grid3X3,
+  List,
+  Calendar,
+  DollarSign,
+  Activity,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Wallet,
+  ArrowLeft,
+  MoreHorizontal,
+} from "lucide-react";
 import { useBlockchain, useNFT } from "../core/hooks/useContext";
 import useResponsive from "../core/hooks/useResponsive";
 import { formatAddress, formatAge, formatValue } from "../core/utils/Formatters.js";
 
 const NftCollections = () => {
   const { isMobile, isTablet, isDesktop } = useResponsive();
-  const { nftTransactions, erc1155Transactions, currentWallet, loading: blockchainLoading, error: blockchainError, loadingStep: blockchainLoadingStep, fetchNFTTransactions, fetchERC1155Transactions, fetchComprehensiveWalletData, validateWalletAddress, clearError: clearBlockchainError, clearData: clearBlockchainData } = useBlockchain();
+  const {
+    nftTransactions,
+    erc1155Transactions,
+    currentWallet,
+    loading: blockchainLoading,
+    error: blockchainError,
+    loadingStep: blockchainLoadingStep,
+    fetchNFTTransactions,
+    fetchERC1155Transactions,
+    fetchComprehensiveWalletData,
+    validateWalletAddress,
+    clearError: clearBlockchainError,
+    clearData: clearBlockchainData,
+  } = useBlockchain();
 
   // NFT Context for collections data
   const {
@@ -24,7 +64,7 @@ const NftCollections = () => {
     fetchComprehensiveAccountData,
     searchCollections,
     clearError: clearNftError,
-    clearData: clearNftData
+    clearData: clearNftData,
   } = useNFT();
 
   // State management
@@ -118,11 +158,7 @@ const NftCollections = () => {
 
     // Search functionality
     if (searchTerm && activeSection === "transactions") {
-      filtered = filtered.filter((collection) => 
-        collection.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-        collection.symbol.toLowerCase().includes(searchTerm.toLowerCase()) || 
-        collection.contractAddress.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      filtered = filtered.filter((collection) => collection.name.toLowerCase().includes(searchTerm.toLowerCase()) || collection.symbol.toLowerCase().includes(searchTerm.toLowerCase()) || collection.contractAddress.toLowerCase().includes(searchTerm.toLowerCase()));
     }
 
     // Apply filters
@@ -153,19 +189,17 @@ const NftCollections = () => {
   // Filter NFT Context collections based on search and filters
   const filteredNftCollections = useMemo(() => {
     if (activeSection !== "collections") return [];
-    
+
     let filtered = searchTerm ? searchCollections(searchTerm) : accountCollections || [];
 
     // Apply type filter
     if (filters.type !== "all") {
       const typeMapping = {
-        'erc-721': 'ERC721',
-        'erc-1155': 'ERC1155'
+        "erc-721": "ERC721",
+        "erc-1155": "ERC1155",
       };
       const mappedType = typeMapping[filters.type] || filters.type.toUpperCase();
-      filtered = filtered.filter(collection => 
-        collection.token_standard?.toUpperCase() === mappedType
-      );
+      filtered = filtered.filter((collection) => collection.token_standard?.toUpperCase() === mappedType);
     }
 
     // Apply sorting
@@ -174,7 +208,7 @@ const NftCollections = () => {
         filtered.sort((a, b) => new Date(b.created_date || 0) - new Date(a.created_date || 0));
         break;
       case "name":
-        filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+        filtered.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
         break;
       case "count":
         filtered.sort((a, b) => (b.total_supply || 0) - (a.total_supply || 0));
@@ -235,10 +269,7 @@ const NftCollections = () => {
 
     try {
       // Fetch transaction-based NFT data first
-      await Promise.all([
-        fetchNFTTransactions(validAddress),
-        fetchERC1155Transactions(validAddress)
-      ]);
+      await Promise.all([fetchNFTTransactions(validAddress), fetchERC1155Transactions(validAddress)]);
 
       // Then fetch NFT Context collections data
       await fetchAccountCollections(validAddress);
@@ -267,7 +298,7 @@ const NftCollections = () => {
     setSelectedCollection(collection);
     setActiveSection("collection-nfts");
     setNftPage(1);
-    
+
     try {
       await fetchCollectionNFTs(collection.slug || collection.contractAddress);
     } catch (err) {
@@ -369,24 +400,10 @@ const NftCollections = () => {
         {/* Section Navigation */}
         {(collections.length > 0 || accountCollections.length > 0) && (
           <div className="mt-6 flex flex-wrap gap-2">
-            <button
-              onClick={() => setActiveSection("transactions")}
-              className={`px-4 py-2 rounded-lg transition-all ${
-                activeSection === "transactions" 
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white" 
-                  : "bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700"
-              }`}
-            >
+            <button onClick={() => setActiveSection("transactions")} className={`px-4 py-2 rounded-lg transition-all ${activeSection === "transactions" ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700"}`}>
               Transaction-Based Collections ({collections.length})
             </button>
-            <button
-              onClick={() => setActiveSection("collections")}
-              className={`px-4 py-2 rounded-lg transition-all ${
-                activeSection === "collections" 
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white" 
-                  : "bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700"
-              }`}
-            >
+            <button onClick={() => setActiveSection("collections")} className={`px-4 py-2 rounded-lg transition-all ${activeSection === "collections" ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700"}`}>
               All Collections ({accountCollections.length})
             </button>
           </div>
@@ -454,9 +471,7 @@ const NftCollections = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-slate-400 text-sm">Verified Collections</p>
-                  <p className="text-2xl font-bold text-white">
-                    {accountCollections.filter(c => c.safelistRequestStatus === 'verified').length}
-                  </p>
+                  <p className="text-2xl font-bold text-white">{accountCollections.filter((c) => c.safelistRequestStatus === "verified").length}</p>
                 </div>
                 <CheckCircle className="text-green-400" size={24} />
               </div>
@@ -466,12 +481,7 @@ const NftCollections = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-slate-400 text-sm">Average Floor Price</p>
-                  <p className="text-2xl font-bold text-white">
-                    {formatValue(
-                      accountCollections.reduce((sum, c) => sum + (c.floor_price || 0), 0) / 
-                      Math.max(accountCollections.filter(c => c.floor_price).length, 1)
-                    )}
-                  </p>
+                  <p className="text-2xl font-bold text-white">{formatValue(accountCollections.reduce((sum, c) => sum + (c.floor_price || 0), 0) / Math.max(accountCollections.filter((c) => c.floor_price).length, 1))}</p>
                 </div>
                 <TrendingUp className="text-blue-400" size={24} />
               </div>
@@ -481,9 +491,7 @@ const NftCollections = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-slate-400 text-sm">Total Supply</p>
-                  <p className="text-2xl font-bold text-white">
-                    {accountCollections.reduce((sum, c) => sum + (c.total_supply || 0), 0)}
-                  </p>
+                  <p className="text-2xl font-bold text-white">{accountCollections.reduce((sum, c) => sum + (c.total_supply || 0), 0)}</p>
                 </div>
                 <Activity className="text-orange-400" size={24} />
               </div>
@@ -493,26 +501,17 @@ const NftCollections = () => {
       </div>
 
       {/* Controls Section */}
-      {((activeSection === "transactions" && collections.length > 0) || 
-        (activeSection === "collections" && accountCollections.length > 0) ||
-        (activeSection === "collection-nfts" && selectedCollection)) && (
+      {((activeSection === "transactions" && collections.length > 0) || (activeSection === "collections" && accountCollections.length > 0) || (activeSection === "collection-nfts" && selectedCollection)) && (
         <div className="p-6 border-b border-slate-700">
           {/* Back button for collection NFTs view */}
           {activeSection === "collection-nfts" && selectedCollection && (
             <div className="mb-4">
-              <button
-                onClick={handleBackToCollections}
-                className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-colors"
-              >
+              <button onClick={handleBackToCollections} className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-colors">
                 <ArrowLeft size={16} />
                 Back to Collections
               </button>
-              <h3 className="text-xl font-bold text-white mt-2">
-                NFTs from {selectedCollection.name || selectedCollection.contractAddress}
-              </h3>
-              <p className="text-slate-400 text-sm">
-                {collectionNFTs?.length || 0} NFTs found
-              </p>
+              <h3 className="text-xl font-bold text-white mt-2">NFTs from {selectedCollection.name || selectedCollection.contractAddress}</h3>
+              <p className="text-slate-400 text-sm">{collectionNFTs?.length || 0} NFTs found</p>
             </div>
           )}
 
@@ -563,11 +562,7 @@ const NftCollections = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={20} />
               <input
                 type="text"
-                placeholder={
-                  activeSection === "collection-nfts" 
-                    ? "Search NFTs by name or description..."
-                    : "Search collections by name, symbol, or address..."
-                }
+                placeholder={activeSection === "collection-nfts" ? "Search NFTs by name or description..." : "Search collections by name, symbol, or address..."}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
@@ -651,11 +646,11 @@ const NftCollections = () => {
               <p className="text-red-400 font-medium">Error loading NFT collections</p>
               <p className="text-red-300 text-sm">{currentError}</p>
             </div>
-            <button 
+            <button
               onClick={() => {
                 clearBlockchainError();
                 clearNftError();
-              }} 
+              }}
               className="ml-auto text-red-400 hover:text-red-300"
             >
               ×
@@ -869,36 +864,51 @@ const NftCollections = () => {
             {viewMode === "grid" ? (
               <div className={`grid ${getGridClass()} gap-6`}>
                 {currentNftCollections.map((collection, index) => (
-                  <motion.div 
-                    key={collection.collection || collection.slug || index} 
-                    initial={{ opacity: 0, y: 20 }} 
-                    animate={{ opacity: 1, y: 0 }} 
-                    transition={{ delay: index * 0.1 }} 
+                  <motion.div
+                    key={collection.collection || collection.slug || index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
                     className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden hover:border-purple-500 transition-all duration-300 group cursor-pointer"
                     onClick={() => handleCollectionClick(collection)}
                   >
+                    
                     {/* Collection Image */}
-                    <div className="aspect-square bg-gradient-to-br from-purple-600/20 to-blue-600/20 flex items-center justify-center relative overflow-hidden">
+                    <div
+                      className="aspect-square bg-gradient-to-br from-purple-600/20 to-blue-600/20 
+                flex items-center justify-center relative overflow-hidden p-2 rounded-lg"
+                    >
                       {collection.image_url ? (
                         <img
-                          src={resolveIPFS(collection.image_url)}
+                          src={collection.image_url}
                           alt={collection.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          referrerPolicy="no-referrer"
+                          className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 object-cover rounded-lg 
+                 group-hover:scale-105 transition-transform duration-300"
                           onError={(e) => {
                             e.target.style.display = "none";
                             e.target.nextSibling.style.display = "flex";
                           }}
                         />
                       ) : null}
-                      <div className={`absolute inset-0 bg-gradient-to-br from-purple-600/10 to-blue-600/10 group-hover:from-purple-600/20 group-hover:to-blue-600/20 transition-all duration-300 flex items-center justify-center ${collection.image_url ? "hidden" : "flex"}`}>
-                        <ImageIcon className="text-slate-400 group-hover:text-purple-400 transition-colors" size={48} />
+
+                      {/* Fallback Icon */}
+                      <div
+                        className={`absolute inset-0 bg-gradient-to-br from-purple-600/10 to-blue-600/10 
+                group-hover:from-purple-600/20 group-hover:to-blue-600/20 
+                transition-all duration-300 flex items-center justify-center 
+                ${collection.image_url ? "hidden" : "flex"}`}
+                      >
+                        <ImageIcon
+                          className="text-slate-400 group-hover:text-purple-400 transition-colors"
+                          size={32} // smaller than before
+                        />
                       </div>
+
                       <div className="absolute top-2 right-2">
-                        <span className={`px-2 py-1 rounded text-xs font-medium ${collection.token_standard === "ERC721" ? "bg-yellow-600 text-yellow-100" : "bg-orange-600 text-orange-100"}`}>
-                          {collection.token_standard || "NFT"}
-                        </span>
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${collection.token_standard === "ERC721" ? "bg-yellow-600 text-yellow-100" : "bg-orange-600 text-orange-100"}`}>{collection.token_standard || "NFT"}</span>
                       </div>
-                      {collection.safelistRequestStatus === 'verified' && (
+                      {collection.safelistRequestStatus === "verified" && (
                         <div className="absolute top-2 left-2">
                           <CheckCircle className="text-green-400" size={16} />
                         </div>
@@ -909,9 +919,7 @@ const NftCollections = () => {
                     <div className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-white font-semibold truncate group-hover:text-purple-400 transition-colors">
-                            {collection.name || "Unnamed Collection"}
-                          </h3>
+                          <h3 className="text-white font-semibold truncate group-hover:text-purple-400 transition-colors">{collection.name || "Unnamed Collection"}</h3>
                           <p className="text-slate-400 text-sm">{collection.symbol || "NFT"}</p>
                         </div>
                       </div>
@@ -923,36 +931,26 @@ const NftCollections = () => {
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-slate-400">Floor Price:</span>
-                          <span className="text-white font-medium">
-                            {collection.floor_price ? formatValue(collection.floor_price) : "N/A"}
-                          </span>
+                          <span className="text-white font-medium">{collection.floor_price ? formatValue(collection.floor_price) : "N/A"}</span>
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-slate-400">Created:</span>
-                          <span className="text-white font-medium">
-                            {collection.created_date ? formatAge(new Date(collection.created_date).getTime() / 1000) : "N/A"}
-                          </span>
+                          <span className="text-white font-medium">{collection.created_date ? formatAge(new Date(collection.created_date).getTime() / 1000) : "N/A"}</span>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between pt-3 border-t border-slate-700">
-                        <button 
+                        <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            copyToClipboard(collection.primary_asset_contracts?.[0]?.address || collection.slug || '');
-                          }} 
+                            copyToClipboard(collection.primary_asset_contracts?.[0]?.address || collection.slug || "");
+                          }}
                           className="flex items-center gap-1 text-blue-400 hover:text-blue-300 text-sm transition-colors"
                         >
-                          {formatAddress(collection.primary_asset_contracts?.[0]?.address || collection.slug || '')}
-                          {copiedAddress === (collection.primary_asset_contracts?.[0]?.address || collection.slug) ? 
-                            <CheckCircle size={12} className="text-green-400" /> : 
-                            <Copy size={12} />
-                          }
+                          {formatAddress(collection.primary_asset_contracts?.[0]?.address || collection.slug || "")}
+                          {copiedAddress === (collection.primary_asset_contracts?.[0]?.address || collection.slug) ? <CheckCircle size={12} className="text-green-400" /> : <Copy size={12} />}
                         </button>
-                        <button 
-                          onClick={(e) => e.stopPropagation()}
-                          className="text-slate-400 hover:text-purple-400 transition-colors"
-                        >
+                        <button onClick={(e) => e.stopPropagation()} className="text-slate-400 hover:text-purple-400 transition-colors">
                           <ExternalLink size={14} />
                         </button>
                       </div>
@@ -964,11 +962,11 @@ const NftCollections = () => {
               /* List View for NFT Collections */
               <div className="space-y-3">
                 {currentNftCollections.map((collection, index) => (
-                  <motion.div 
-                    key={collection.collection || collection.slug || index} 
-                    initial={{ opacity: 0, x: -20 }} 
-                    animate={{ opacity: 1, x: 0 }} 
-                    transition={{ delay: index * 0.05 }} 
+                  <motion.div
+                    key={collection.collection || collection.slug || index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
                     className="bg-slate-800 rounded-lg border border-slate-700 p-4 hover:border-purple-500 transition-all duration-300 cursor-pointer"
                     onClick={() => handleCollectionClick(collection)}
                   >
@@ -976,7 +974,7 @@ const NftCollections = () => {
                       <div className="w-16 h-16 bg-gradient-to-br from-purple-600/20 to-blue-600/20 rounded-lg flex items-center justify-center flex-shrink-0 relative overflow-hidden">
                         {collection.image_url ? (
                           <img
-                            src={resolveIPFS(collection.image_url)}
+                            src={collection.image_url || collection.display_image_url}
                             alt={collection.name}
                             className="w-full h-full object-cover rounded-lg"
                             onError={(e) => {
@@ -985,7 +983,7 @@ const NftCollections = () => {
                             }}
                           />
                         ) : null}
-                        <div className={`absolute inset-0 flex items-center justify-center ${collection.image_url ? "hidden" : "flex"}`}>
+                        <div className={`absolute inset-0 flex items-center justify-center ${collection.image_url || collection.display_image_url ? "hidden" : "flex"}`}>
                           <ImageIcon className="text-slate-400" size={24} />
                         </div>
                       </div>
@@ -993,10 +991,8 @@ const NftCollections = () => {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="text-white font-semibold truncate">{collection.name || "Unnamed Collection"}</h3>
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${collection.token_standard === "ERC721" ? "bg-yellow-600 text-yellow-100" : "bg-orange-600 text-orange-100"}`}>
-                            {collection.token_standard || "NFT"}
-                          </span>
-                          {collection.safelistRequestStatus === 'verified' && <CheckCircle className="text-green-400" size={16} />}
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${collection.token_standard === "erc721" ? "bg-yellow-600 text-yellow-100" : "bg-orange-600 text-orange-100"}`}>{collection.token_standard || "NFT"}</span>
+                          {collection.safelistRequestStatus === "verified" && <CheckCircle className="text-green-400" size={16} />}
                         </div>
                         <p className="text-slate-400 text-sm mb-2">{collection.symbol || "NFT"}</p>
 
@@ -1007,34 +1003,24 @@ const NftCollections = () => {
                           </div>
                           <div>
                             <span className="text-slate-400">Floor: </span>
-                            <span className="text-white font-medium">
-                              {collection.floor_price ? formatValue(collection.floor_price) : "N/A"}
-                            </span>
+                            <span className="text-white font-medium">{collection.floor_price ? formatValue(collection.floor_price) : "N/A"}</span>
                           </div>
                           <div>
                             <span className="text-slate-400">Created: </span>
-                            <span className="text-white font-medium">
-                              {collection.created_date ? formatAge(new Date(collection.created_date).getTime() / 1000) : "N/A"}
-                            </span>
+                            <span className="text-white font-medium">{collection.created_date ? formatAge(new Date(collection.created_date).getTime() / 1000) : "N/A"}</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <button 
+                            <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                copyToClipboard(collection.primary_asset_contracts?.[0]?.address || collection.slug || '');
+                                copyToClipboard(collection.primary_asset_contracts?.[0]?.address || collection.slug || "");
                               }}
                               className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition-colors"
                             >
-                              {formatAddress(collection.primary_asset_contracts?.[0]?.address || collection.slug || '')}
-                              {copiedAddress === (collection.primary_asset_contracts?.[0]?.address || collection.slug) ? 
-                                <CheckCircle size={12} className="text-green-400" /> : 
-                                <Copy size={12} />
-                              }
+                              {formatAddress(collection.primary_asset_contracts?.[0]?.address || collection.slug || "")}
+                              {copiedAddress === (collection.primary_asset_contracts?.[0]?.address || collection.slug) ? <CheckCircle size={12} className="text-green-400" /> : <Copy size={12} />}
                             </button>
-                            <button 
-                              onClick={(e) => e.stopPropagation()}
-                              className="text-slate-400 hover:text-purple-400 transition-colors"
-                            >
+                            <button onClick={(e) => e.stopPropagation()} className="text-slate-400 hover:text-purple-400 transition-colors">
                               <ExternalLink size={14} />
                             </button>
                           </div>
@@ -1105,11 +1091,11 @@ const NftCollections = () => {
             {viewMode === "grid" ? (
               <div className={`grid ${getGridClass()} gap-6`}>
                 {currentNFTs.map((nft, index) => (
-                  <motion.div 
-                    key={nft.identifier || nft.token_id || index} 
-                    initial={{ opacity: 0, y: 20 }} 
-                    animate={{ opacity: 1, y: 0 }} 
-                    transition={{ delay: index * 0.1 }} 
+                  <motion.div
+                    key={nft.identifier || nft.token_id || index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
                     className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden hover:border-purple-500 transition-all duration-300 group"
                   >
                     {/* NFT Image */}
@@ -1129,9 +1115,7 @@ const NftCollections = () => {
                         <ImageIcon className="text-slate-400 group-hover:text-purple-400 transition-colors" size={48} />
                       </div>
                       <div className="absolute top-2 right-2">
-                        <span className="px-2 py-1 rounded text-xs font-medium bg-blue-600 text-blue-100">
-                          #{nft.identifier || nft.token_id || "N/A"}
-                        </span>
+                        <span className="px-2 py-1 rounded text-xs font-medium bg-blue-600 text-blue-100">#{nft.identifier || nft.token_id || "N/A"}</span>
                       </div>
                     </div>
 
@@ -1139,9 +1123,7 @@ const NftCollections = () => {
                     <div className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-white font-semibold truncate group-hover:text-purple-400 transition-colors">
-                            {nft.name || `NFT #${nft.identifier || nft.token_id}`}
-                          </h3>
+                          <h3 className="text-white font-semibold truncate group-hover:text-purple-400 transition-colors">{nft.name || `NFT #${nft.identifier || nft.token_id}`}</h3>
                           <p className="text-slate-400 text-sm">{selectedCollection.name}</p>
                         </div>
                       </div>
@@ -1164,15 +1146,9 @@ const NftCollections = () => {
                       </div>
 
                       <div className="flex items-center justify-between pt-3 border-t border-slate-700">
-                        <button 
-                          onClick={() => copyToClipboard(nft.contract || selectedCollection.primary_asset_contracts?.[0]?.address || '')} 
-                          className="flex items-center gap-1 text-blue-400 hover:text-blue-300 text-sm transition-colors"
-                        >
-                          {formatAddress(nft.contract || selectedCollection.primary_asset_contracts?.[0]?.address || '')}
-                          {copiedAddress === (nft.contract || selectedCollection.primary_asset_contracts?.[0]?.address) ? 
-                            <CheckCircle size ={12} className="text-green-400" /> : 
-                            <Copy size={12} />
-                          }
+                        <button onClick={() => copyToClipboard(nft.contract || selectedCollection.primary_asset_contracts?.[0]?.address || "")} className="flex items-center gap-1 text-blue-400 hover:text-blue-300 text-sm transition-colors">
+                          {formatAddress(nft.contract || selectedCollection.primary_asset_contracts?.[0]?.address || "")}
+                          {copiedAddress === (nft.contract || selectedCollection.primary_asset_contracts?.[0]?.address) ? <CheckCircle size={12} className="text-green-400" /> : <Copy size={12} />}
                         </button>
                         <button className="text-slate-400 hover:text-purple-400 transition-colors">
                           <ExternalLink size={14} />
@@ -1186,13 +1162,7 @@ const NftCollections = () => {
               /* List View for Collection NFTs */
               <div className="space-y-3">
                 {currentNFTs.map((nft, index) => (
-                  <motion.div 
-                    key={nft.identifier || nft.token_id || index} 
-                    initial={{ opacity: 0, x: -20 }} 
-                    animate={{ opacity: 1, x: 0 }} 
-                    transition={{ delay: index * 0.05 }} 
-                    className="bg-slate-800 rounded-lg border border-slate-700 p-4 hover:border-purple-500 transition-all duration-300"
-                  >
+                  <motion.div key={nft.identifier || nft.token_id || index} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.05 }} className="bg-slate-800 rounded-lg border border-slate-700 p-4 hover:border-purple-500 transition-all duration-300">
                     <div className="flex items-center gap-4">
                       <div className="w-16 h-16 bg-gradient-to-br from-purple-600/20 to-blue-600/20 rounded-lg flex items-center justify-center flex-shrink-0 relative overflow-hidden">
                         {nft.image_url || nft.image ? (
@@ -1213,12 +1183,8 @@ const NftCollections = () => {
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-white font-semibold truncate">
-                            {nft.name || `NFT #${nft.identifier || nft.token_id}`}
-                          </h3>
-                          <span className="px-2 py-1 rounded text-xs font-medium bg-blue-600 text-blue-100">
-                            #{nft.identifier || nft.token_id || "N/A"}
-                          </span>
+                          <h3 className="text-white font-semibold truncate">{nft.name || `NFT #${nft.identifier || nft.token_id}`}</h3>
+                          <span className="px-2 py-1 rounded text-xs font-medium bg-blue-600 text-blue-100">#{nft.identifier || nft.token_id || "N/A"}</span>
                         </div>
                         <p className="text-slate-400 text-sm mb-2">{selectedCollection.name}</p>
 
@@ -1236,15 +1202,9 @@ const NftCollections = () => {
                             <span className="text-white font-medium">{nft.rarity || "N/A"}</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <button 
-                              onClick={() => copyToClipboard(nft.contract || selectedCollection.primary_asset_contracts?.[0]?.address || '')}
-                              className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition-colors"
-                            >
-                              {formatAddress(nft.contract || selectedCollection.primary_asset_contracts?.[0]?.address || '')}
-                              {copiedAddress === (nft.contract || selectedCollection.primary_asset_contracts?.[0]?.address) ? 
-                                <CheckCircle size={12} className="text-green-400" /> : 
-                                <Copy size={12} />
-                              }
+                            <button onClick={() => copyToClipboard(nft.contract || selectedCollection.primary_asset_contracts?.[0]?.address || "")} className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition-colors">
+                              {formatAddress(nft.contract || selectedCollection.primary_asset_contracts?.[0]?.address || "")}
+                              {copiedAddress === (nft.contract || selectedCollection.primary_asset_contracts?.[0]?.address) ? <CheckCircle size={12} className="text-green-400" /> : <Copy size={12} />}
                             </button>
                             <button className="text-slate-400 hover:text-purple-400 transition-colors">
                               <ExternalLink size={14} />
@@ -1283,11 +1243,7 @@ const NftCollections = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setNftPage(Math.max(1, nftPage - 1))}
-                  disabled={nftPage === 1}
-                  className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg border border-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
+                <button onClick={() => setNftPage(Math.max(1, nftPage - 1))} disabled={nftPage === 1} className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg border border-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                   <ChevronLeft size={16} />
                   Previous
                 </button>
@@ -1318,13 +1274,8 @@ const NftCollections = () => {
               <ImageIcon className="text-slate-400" size={32} />
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">No NFTs Found</h3>
-            <p className="text-slate-400 mb-6">
-              This collection appears to be empty or the NFTs couldn't be loaded.
-            </p>
-            <button
-              onClick={handleBackToCollections}
-              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all"
-            >
+            <p className="text-slate-400 mb-6">This collection appears to be empty or the NFTs couldn't be loaded.</p>
+            <button onClick={handleBackToCollections} className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all">
               Back to Collections
             </button>
           </div>
@@ -1339,13 +1290,8 @@ const NftCollections = () => {
               <Palette className="text-slate-400" size={32} />
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">No Collections Found</h3>
-            <p className="text-slate-400 mb-6">
-              This address doesn't appear to own any NFT collections, or they couldn't be loaded from the blockchain.
-            </p>
-            <button
-              onClick={() => setActiveSection("transactions")}
-              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all"
-            >
+            <p className="text-slate-400 mb-6">This address doesn't appear to own any NFT collections, or they couldn't be loaded from the blockchain.</p>
+            <button onClick={() => setActiveSection("transactions")} className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all">
               View Transaction-Based Collections
             </button>
           </div>

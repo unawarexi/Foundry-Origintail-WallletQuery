@@ -33,7 +33,7 @@ bower_components/
 .env
 .env.test
 .env.production
-.env.*
+
 
 # Optional npm cache directory
 .npm

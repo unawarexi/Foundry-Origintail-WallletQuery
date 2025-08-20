@@ -13,7 +13,7 @@ const App = () => {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="balance" element={<NotAvailable />} />
+          <Route path="special-tokens" element={<NotAvailable />} />
           <Route path="transactions" element={<TransactionsTable />} />
           <Route path="nftcards" element={<NftCollections />} />
           <Route path="settings" element={<NotAvailable />} />

@@ -1,5 +1,5 @@
 // src/controllers/transactions.controller.js
-import ethService from "../service/eth.service.js";
+import ethService from "../services/eth.service.js";
 
 export async function getTransactions(req, res) {
   try {

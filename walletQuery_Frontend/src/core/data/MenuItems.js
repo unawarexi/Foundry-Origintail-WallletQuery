@@ -8,10 +8,10 @@ export const menuItems = [
     description: "Overview",
   },
   {
-    id: "balance",
-    label: "Balance",
+    id: "special tokens",
+    label: "Special Tokens",
     icon: Wallet,
-    route: "/balance",
+    route: "/special-tokens",
     description: "View wallet balance",
   },
   {

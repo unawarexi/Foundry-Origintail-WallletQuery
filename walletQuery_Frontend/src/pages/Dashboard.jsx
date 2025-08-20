@@ -9,7 +9,6 @@ import {
   Activity,
   DollarSign,
   Users,
-  ArrowUpRight,
   ArrowDownLeft,
   Copy,
   ExternalLink,
@@ -20,7 +19,6 @@ import {
   AlertCircle,
   Loader,
   RefreshCw,
-  CalendarDays,
   Coins,
   Target,
   BarChart3,
@@ -36,6 +34,8 @@ import {
 import { useBlockchain } from "../core/hooks/useContext";
 import { formatAddress, formatHash, formatTimestamp } from "../core/utils/Formatters";
 import { copyToClipboard } from "../core/utils/HelperFunctions";
+import { getTransactionBg, getTransactionColor } from "../core/utils/Colors";
+import { getTransactionIcon } from "../core/utils/Constants";
 
 const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -442,69 +442,6 @@ const Dashboard = () => {
     }
   };
 
-  // Utility functions
-  // const formatAddress = (address) => {
-  //   if (!address) return "";
-  //   return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  // };
-
-  // const formatHash = (hash) => {
-  //   if (!hash) return "";
-  //   return `${hash.slice(0, 10)}...${hash.slice(-8)}`;
-  // };
-
-  // const formatTimestamp = (timestamp) => {
-  //   return new Date(timestamp * 1000).toLocaleString();
-  // };
-
-  // const copyToClipboard = async (text) => {
-  //   try {
-  //     await navigator.clipboard.writeText(text);
-  //     console.log("📋 Copied to clipboard:", text);
-  //   } catch (err) {
-  //     console.error("❌ Copy failed:", err);
-  //   }
-  // };
-
-  const getTransactionIcon = (type) => {
-    switch (type?.toLowerCase()) {
-      case "send":
-        return ArrowUpRight;
-      case "receive":
-        return ArrowDownLeft;
-      case "swap":
-        return Activity;
-      default:
-        return Activity;
-    }
-  };
-
-  const getTransactionColor = (type) => {
-    switch (type?.toLowerCase()) {
-      case "send":
-        return "text-red-400";
-      case "receive":
-        return "text-green-400";
-      case "swap":
-        return "text-blue-400";
-      default:
-        return "text-slate-400";
-    }
-  };
-
-  const getTransactionBg = (type) => {
-    switch (type?.toLowerCase()) {
-      case "send":
-        return "bg-red-500 bg-opacity-20";
-      case "receive":
-        return "bg-green-500 bg-opacity-20";
-      case "swap":
-        return "bg-blue-500 bg-opacity-20";
-      default:
-        return "bg-slate-500 bg-opacity-20";
-    }
-  };
-
   // Calculate dynamic stats from actual data
   const calculateStats = () => {
     const stats = [
@@ -582,7 +519,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className=" rounded-xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
+    <div className=" rounded-xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border border-slate-700  p-6">
       <div className="max-w-7xl mx-auto py-10">
         {/* Header */}
         <div className="mb-8">

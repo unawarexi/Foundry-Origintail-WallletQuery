@@ -43,6 +43,7 @@ const TransactionsTable = () => {
     }
   }, [allTransactions]);
 
+  const checkAllTransactions = () => { }
   // Handle search and filtering
   useEffect(() => {
     let filtered = [...transactions];

@@ -1,0 +1,3 @@
+use this for ethereum and transactions = 0x396343362be2A4dA1cE0C1C210945346fb82Aa49
+
+use this for nfts = 0x5243e11dde96cf9c0fbdf29c4039a6593f40fbfd

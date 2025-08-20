@@ -1,3 +1,0 @@
-[submodule "walletQuery-Backend/lib/forge-std"]
-	path = walletQuery-Backend/lib/forge-std
-	url = https://github.com/foundry-rs/forge-std

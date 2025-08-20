@@ -40,7 +40,7 @@ const NavBar = () => {
   return (
     <motion.nav
       className={`
-        fixed top-0 right-0 h-16 z-20
+        fixed top-0 right-0 h-16 z-20 rounded-tl-3xl rounded-bl-3xl
         bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 
         border-b border-slate-700 shadow-2xl
         transition-all duration-300
@@ -56,36 +56,40 @@ const NavBar = () => {
           {/* Logo - Only show on larger screens or when sidebar is collapsed */}
           {(isTablet || isDesktop) && (
             <motion.div className="flex items-center space-x-2" whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300, damping: 30 }}>
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+              {/* <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Wallet className="text-white" size={16} />
-              </div>
+              </div> */}
               <span className="text-white font-bold text-lg hidden lg:block">Web3 Wallet</span>
             </motion.div>
           )}
 
           {/* Search Bar */}
-          <motion.div className="relative flex-1 max-w-md" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={18} />
-              <input
-                type="text"
-                placeholder={isMobile ? "Search..." : "Search transactions, addresses..."}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-              />
-            </div>
-          </motion.div>
+          {(isTablet || isDesktop) && (
+            <motion.div className="relative flex-1 max-w-md" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={18} />
+                <input
+                  type="text"
+                  placeholder={isMobile ? "Search..." : "Search transactions, addresses..."}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                />
+              </div>
+            </motion.div>
+          )}
         </div>
 
         {/* Right Section - Wallet, Notifications, Profile */}
         <div className="flex items-center space-x-3">
           {/* Network Indicator */}
-          <motion.div className="hidden sm:flex items-center space-x-2 px-3 py-2 bg-slate-800 rounded-lg border border-slate-600" whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300, damping: 30 }}>
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-sm text-slate-300">Ethereum</span>
-            <Globe size={14} className="text-slate-400" />
-          </motion.div>
+          {(isDesktop) && (
+            <motion.div className="hidden sm:flex items-center space-x-2 px-3 py-2 bg-slate-800 rounded-lg border border-slate-600" whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300, damping: 30 }}>
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-sm text-slate-300">Ethereum</span>
+              <Globe size={14} className="text-slate-400" />
+            </motion.div>
+          )}
 
           {/* Wallet Info */}
           <div className="relative">

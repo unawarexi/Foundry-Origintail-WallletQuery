@@ -266,4 +266,4 @@ declare class SDK {
     get_trait_offers_v2(metadata: types.GetTraitOffersV2MetadataParam): Promise<FetchResponse<200, types.GetTraitOffersV2Response200>>;
 }
 declare const createSDK: SDK;
-export default createSDK;
+export = createSDK;

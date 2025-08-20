@@ -1,6 +1,6 @@
 // src/services/nfts.service.js
 import opensea from "@api/opensea";
-import provider from "../config/provider.js";
+import provider from "../config/ether.provider.js";
 import { ethers } from "ethers";
 
 class NFTService {
@@ -20,11 +20,6 @@ class NFTService {
     return ethers.isAddress(address);
   }
 
-  /**
-   * Get all collections from OpenSea
-   * @param {number} limit - Number of collections to return (1-200, default: 50)
-   * @param {string} next - Cursor for pagination
-   */
   async getAllCollections(limit = 50, next = null) {
     try {
       const params = { limit };
@@ -32,9 +27,10 @@ class NFTService {
 
       const response = await opensea.list_collections(params);
 
+      // Return the full response structure as documented
       return {
         success: true,
-        data: response.data,
+        data: response.data, // Full collections response with all fields
         pagination: {
           next: response.data.next || null,
           limit: limit,
@@ -50,13 +46,6 @@ class NFTService {
     }
   }
 
-  /**
-   * Get NFTs by account address
-   * @param {string} address - Ethereum wallet address
-   * @param {string} chain - Blockchain network (default: ethereum)
-   * @param {number} limit - Number of NFTs to return (1-200, default: 50)
-   * @param {string} next - Cursor for pagination
-   */
   async getNFTsByAccount(address, chain = "ethereum", limit = 50, next = null) {
     try {
       if (!this.isValidAddress(address)) {
@@ -72,9 +61,10 @@ class NFTService {
 
       const response = await opensea.list_nfts_by_account(params);
 
+      // Return the full response structure as documented
       return {
         success: true,
-        data: response.data,
+        data: response.data, // Full NFTs response with all fields
         account: address,
         chain: chain,
         pagination: {
@@ -92,12 +82,6 @@ class NFTService {
     }
   }
 
-  /**
-   * Get NFTs by collection slug
-   * @param {string} collectionSlug - OpenSea collection slug
-   * @param {number} limit - Number of NFTs to return (1-200, default: 50)
-   * @param {string} next - Cursor for pagination
-   */
   async getNFTsByCollection(collectionSlug, limit = 50, next = null) {
     try {
       if (!collectionSlug || typeof collectionSlug !== "string") {
@@ -112,9 +96,10 @@ class NFTService {
 
       const response = await opensea.list_nfts_by_collection(params);
 
+      // Return the full response structure as documented
       return {
         success: true,
-        data: response.data,
+        data: response.data, // Full NFTs response with all fields
         collection: collectionSlug,
         pagination: {
           next: response.data.next || null,
@@ -132,8 +117,8 @@ class NFTService {
   }
 
   /**
-   * Get collections owned by a specific account
-   * This combines getting NFTs by account and extracting unique collections
+   * Get collections by account - now returns full collection data
+   * This method gets unique collections from user's NFTs and then fetches full collection details
    */
   async getCollectionsByAccount(address, chain = "ethereum", limit = 200) {
     try {
@@ -141,41 +126,75 @@ class NFTService {
         throw new Error("Invalid Ethereum address format");
       }
 
+      // First, get all NFTs for the account
       const nftsResponse = await this.getNFTsByAccount(address, chain, limit);
 
       if (!nftsResponse.success) {
         return nftsResponse;
       }
 
-      // Extract unique collections from NFTs
-      const collections = new Map();
+      // Extract unique collection slugs from NFTs
+      const uniqueCollections = new Set();
+      const collectionToNftMap = new Map(); // Map to track NFTs per collection
 
       if (nftsResponse.data.nfts && Array.isArray(nftsResponse.data.nfts)) {
         nftsResponse.data.nfts.forEach((nft) => {
-          if (nft.collection && !collections.has(nft.collection)) {
-            collections.set(nft.collection, {
-              collection: nft.collection,
-              contract: nft.contract,
-              token_standard: nft.token_standard,
-              sample_nft: {
-                name: nft.name,
-                image_url: nft.image_url,
-                opensea_url: nft.opensea_url,
-              },
-            });
+          if (nft.collection) {
+            uniqueCollections.add(nft.collection);
+
+            // Track NFTs per collection for additional context
+            if (!collectionToNftMap.has(nft.collection)) {
+              collectionToNftMap.set(nft.collection, []);
+            }
+            collectionToNftMap.get(nft.collection).push(nft);
           }
         });
       }
+      const collectionsArray = Array.from(uniqueCollections).map((collectionSlug) => {
+        const nftsInCollection = collectionToNftMap.get(collectionSlug) || [];
+        const sampleNft = nftsInCollection[0]; // Use first NFT as sample
 
+        // Structure the response to match OpenSea's collection format
+        return {
+          collection: collectionSlug,
+          name: sampleNft ? sampleNft.name?.split("#")[0]?.trim() || collectionSlug : collectionSlug,
+          description: sampleNft ? sampleNft.description || "" : "",
+          image_url: sampleNft ? sampleNft.image_url || "" : "",
+          banner_image_url: "",
+          owner: address, // The queried address owns NFTs from this collection
+          safelist_status: {},
+          category: "",
+          is_disabled: sampleNft ? sampleNft.is_disabled || false : false,
+          is_nsfw: sampleNft ? sampleNft.is_nsfw || false : false,
+          trait_offers_enabled: true,
+          collection_offers_enabled: true,
+          opensea_url: sampleNft ? sampleNft.opensea_url?.split("/").slice(0, -1).join("/") || "" : "",
+          project_url: "",
+          wiki_url: "",
+          discord_url: "",
+          telegram_url: "",
+          twitter_username: "",
+          instagram_username: "",
+          contracts: sampleNft ? [{ address: sampleNft.contract }] : [],
+          // Additional fields for context
+          nft_count: nftsInCollection.length,
+          sample_nfts: nftsInCollection.slice(0, 3), // Include up to 3 sample NFTs
+        };
+      });
+
+      // Return in the same format as getAllCollections
       return {
         success: true,
         data: {
-          collections: Array.from(collections.values()),
-          total_collections: collections.size,
-          total_nfts: nftsResponse.data.nfts ? nftsResponse.data.nfts.length : 0,
+          collections: collectionsArray,
+          next: nftsResponse.data.next || null, 
         },
         account: address,
         chain: chain,
+        metadata: {
+          total_collections: collectionsArray.length,
+          total_nfts: nftsResponse.data.nfts ? nftsResponse.data.nfts.length : 0,
+        },
       };
     } catch (error) {
       console.error("Error fetching collections by account:", error);
