@@ -13,7 +13,7 @@ A full-stack application for querying and crawlling wallet transactions and NFTs
 1. **Clone the repository**
    ```bash
    git clone https://github.com/unawarexi/FullStack-Origintail-WallletQuery.git
-   cd Foundry-Origintail-WallletQuery
+   cd FullStack-Origintail-WallletQuery
    ```
 
 ## Frontend Setup
